@@ -33,7 +33,20 @@ export default {
       }
     }
 
-    if (result !== null) return new Response(result)
+    if (result !== null) {
+      // Create cache headers.
+      const headerName = "Cache-Control"
+      const maxAge = 24 * 60 * 60 // 1 day in seconds
+      const headers = new Headers()
+      headers.append(headerName, "public")
+      headers.append(headerName, `s-max-age=${maxAge}`)
+
+      return new Response(result, {
+        headers: {
+          "Cache-Control": `s-max-age=${maxAge}`,
+        },
+      })
+    }
     return new Response(null, { status: 404 })
   },
   async scheduled(_, env) {
