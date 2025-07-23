@@ -41,11 +41,7 @@ export default {
       headers.append(headerName, "public")
       headers.append(headerName, `s-max-age=${maxAge}`)
 
-      return new Response(result, {
-        headers: {
-          "Cache-Control": `s-max-age=${maxAge}`,
-        },
-      })
+      return new Response(result, { headers })
     }
     return new Response(null, { status: 404 })
   },
