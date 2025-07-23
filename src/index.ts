@@ -36,11 +36,10 @@ export default {
     if (result !== null) {
       // Create cache headers.
       const headerName = "Cache-Control"
-      const maxAge = 24 * 60 * 60 // 1 day in seconds
       const headers = new Headers()
       headers.append(headerName, "public")
-      headers.append(headerName, `max-age=${maxAge}`)
-      headers.append(headerName, `s-max-age=${maxAge}`)
+      headers.append(headerName, `max-age=${60 * 60}`) // 1 hour
+      headers.append(headerName, `s-maxage=${24 * 60 * 60}`) // 1 day
 
       return new Response(result, { headers })
     }
