@@ -10,6 +10,7 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
+import { sync } from "./sync"
 
 const PATH_TARGET_MAP = new Map([
   [
@@ -21,35 +22,28 @@ const PATH_TARGET_MAP = new Map([
 export default {
   async fetch(request, env): Promise<Response> {
     const url = new URL(request.url)
+
     // No need to account for assets, since those will be served automatically.
-    const result = await env.KV.get(url.pathname)
-    if (result !== null) {
-      return new Response(result)
+    let result = await env.KV.get(url.pathname)
+    // If nothing is stored in KV, sync the target path if defined.
+    if (result === null) {
+      const target = PATH_TARGET_MAP.get(url.pathname)
+      if (target !== undefined) {
+        result = await sync(env, url.pathname, target)
+      }
     }
+
+    if (result !== null) return new Response(result)
     return new Response(null, { status: 404 })
   },
   async scheduled(_, env) {
     const start = Date.now()
     console.info("Starting sync.")
-    for (const [path, target] of PATH_TARGET_MAP) {
-      const current = await env.KV.get(path)
-
-      const response = await fetch(target)
-      if (!response.ok) {
-        console.error(
-          `Error while retrieving latest ${path}: (${response.status}) ${response.statusText}`,
-        )
-        continue
-      }
-      const latest = await response.text()
-
-      if (current !== latest) {
-        await env.KV.put(path, latest)
-        console.info(`Updated ${path}!`)
-      } else {
-        console.info(`No change for ${path}.`)
-      }
-    }
+    await Promise.all(
+      Array.from(PATH_TARGET_MAP).map(([path, target]) =>
+        sync(env, path, target),
+      ),
+    )
     const end = Date.now()
 
     const duration = (end - start) / 1_000
