@@ -1,0 +1,29 @@
+{
+  "name": "text-files",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --test-scheduled",
+    "start": "wrangler dev --test-scheduled",
+    "test": "vitest",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.1.2",
+    "@cloudflare/vite-plugin": "^1.10.0",
+    "@cloudflare/vitest-pool-workers": "^0.8.56",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.5",
+    "wrangler": "^4.25.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild",
+      "sharp",
+      "workerd"
+    ]
+  }
+}

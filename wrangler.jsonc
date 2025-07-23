@@ -1,0 +1,157 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "text-files-server",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-07-23",
+  "observability": {
+    "enabled": true
+  },
+  /**
+   * Smart Placement
+   * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+   */
+  "placement": { "mode": "smart" },
+
+  "triggers": {
+    // Every day at 04:26 UTC
+    "crons": ["26 4 * * *"]
+  },
+
+  /**
+   * Workers.dev
+   * Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#workersdev
+   */
+  "workers_dev": false,
+  /**
+   * Routes
+   * Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#routes
+   */
+  "routes": [
+    {
+      "pattern": "maiayeager.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "micahyeager.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "versorecto.blog",
+      "custom_domain": true
+    },
+    {
+      "pattern": "yeagers.co",
+      "custom_domain": true
+    },
+    {
+      "pattern": "yeagers.download",
+      "custom_domain": true
+    },
+    // Per Cloudflare's security team, it's perfectly fine to have Zone ID
+    // information publicly available.
+    // https://github.com/cloudflare/wrangler-legacy/issues/209#issuecomment-541654484
+    {
+      "pattern": "*maiayeager.com/.well_known/security.txt",
+      "zone_id": "ca026e2be77183b545da4cfe3d367227"
+    },
+    {
+      "pattern": "*maiayeager.com/ai.txt",
+      "zone_id": "ca026e2be77183b545da4cfe3d367227"
+    },
+    {
+      "pattern": "*maiayeager.com/robots.txt",
+      "zone_id": "ca026e2be77183b545da4cfe3d367227"
+    },
+    {
+      "pattern": "*micahyeager.com/.well_known/security.txt",
+      "zone_id": "a038a70c5a964d7d26834a566fbf3973"
+    },
+    {
+      "pattern": "*micahyeager.com/ai.txt",
+      "zone_id": "a038a70c5a964d7d26834a566fbf3973"
+    },
+    {
+      "pattern": "*micahyeager.com/robots.txt",
+      "zone_id": "a038a70c5a964d7d26834a566fbf3973"
+    },
+    {
+      "pattern": "*yeagers.co/.well_known/security.txt",
+      "zone_id": "450b66320e47338fd7723a0d537c8ca2"
+    },
+    {
+      "pattern": "*yeagers.co/ai.txt",
+      "zone_id": "450b66320e47338fd7723a0d537c8ca2"
+    },
+    {
+      "pattern": "*yeagers.co/robots.txt",
+      "zone_id": "450b66320e47338fd7723a0d537c8ca2"
+    },
+    {
+      "pattern": "*yeagers.download/.well_known/security.txt",
+      "zone_id": "355d9f3ed27a2200dd2ac3664acc4dfc"
+    },
+    {
+      "pattern": "*yeagers.download/ai.txt",
+      "zone_id": "355d9f3ed27a2200dd2ac3664acc4dfc"
+    },
+    {
+      "pattern": "*yeagers.download/robots.txt",
+      "zone_id": "355d9f3ed27a2200dd2ac3664acc4dfc"
+    },
+    {
+      "pattern": "*versorecto.blog/.well_known/security.txt",
+      "zone_id": "9477f597383b1dcdb9d5c105f1d9ae69"
+    },
+    {
+      "pattern": "*versorecto.blog/ai.txt",
+      "zone_id": "9477f597383b1dcdb9d5c105f1d9ae69"
+    },
+    {
+      "pattern": "*versorecto.blog/robots.txt",
+      "zone_id": "9477f597383b1dcdb9d5c105f1d9ae69"
+    }
+  ],
+
+  /**
+   * Bindings
+   * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
+   * databases, object storage, AI inference, real-time communication and more.
+   * https://developers.cloudflare.com/workers/runtime-apis/bindings/
+   */
+
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "59e3d7e129ac4b91a295703d61aa730b"
+    }
+  ],
+
+  /**
+   * Environment Variables
+   * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+   */
+  // "vars": { "MY_VARIABLE": "production_value" },
+  /**
+   * Note: Use secrets to store sensitive data.
+   * https://developers.cloudflare.com/workers/configuration/secrets/
+   */
+
+  /**
+   * Static Assets
+   * https://developers.cloudflare.com/workers/static-assets/binding/
+   */
+  "assets": {
+    "directory": "./assets/",
+    "run_worker_first": false
+  }
+
+  /**
+   * Service Bindings (communicate between multiple Workers)
+   * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
+   */
+  // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
+}
