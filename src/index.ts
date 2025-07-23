@@ -39,6 +39,7 @@ export default {
       const maxAge = 24 * 60 * 60 // 1 day in seconds
       const headers = new Headers()
       headers.append(headerName, "public")
+      headers.append(headerName, `max-age=${maxAge}`)
       headers.append(headerName, `s-max-age=${maxAge}`)
 
       return new Response(result, { headers })
